@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjprruufasp1k"]
+
+[ext_resource type="Texture2D" uid="uid://dbixkimpmm0lt" path="res://Assets/CardSlot.png" id="1_dt2uv"]
+
+[node name="CardSlot" type="Node2D"]
+
+[node name="CardsSlotImage" type="Sprite2D" parent="."]
+texture = ExtResource("1_dt2uv")
