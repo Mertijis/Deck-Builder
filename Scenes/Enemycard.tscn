@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://djwjhx7vf01mb"]
 
 [ext_resource type="Script" path="res://Scripts/Enemycard.gd" id="1_3faj5"]
-[ext_resource type="Texture2D" uid="uid://bhogpqwlpt3ro" path="res://Assets/CardsImage/Luffy.jpg" id="2_10ql6"]
-[ext_resource type="Texture2D" uid="uid://bd5cfawy68rlh" path="res://Assets/CardsImage/OnePiceLogo.png" id="3_rd4av"]
-[ext_resource type="Texture2D" uid="uid://cpn1jtkuf0gs1" path="res://Assets/Deck.png" id="4_x0lbm"]
+[ext_resource type="Texture2D" uid="uid://cvi6gdshpvhq6" path="res://Assets/CardsImage/Luffy.jpg" id="2_10ql6"]
+[ext_resource type="Texture2D" uid="uid://bf2is2k6fch4f" path="res://Assets/CardsImage/OnePiceLogo.png" id="3_rd4av"]
+[ext_resource type="Texture2D" uid="uid://xvi8qmwdkrte" path="res://Assets/BackCard.png" id="4_rur0j"]
 
 [sub_resource type="Animation" id="Animation_c42d0"]
 tracks/0/type = "value"
@@ -117,7 +117,7 @@ tracks/8/keys = {
 tracks/9/type = "value"
 tracks/9/imported = false
 tracks/9/enabled = true
-tracks/9/path = NodePath("poder:modulate")
+tracks/9/path = NodePath("Poder:modulate")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/keys = {
@@ -129,7 +129,7 @@ tracks/9/keys = {
 tracks/10/type = "value"
 tracks/10/imported = false
 tracks/10/enabled = true
-tracks/10/path = NodePath("poder:z_index")
+tracks/10/path = NodePath("Poder:z_index")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/keys = {
@@ -210,13 +210,14 @@ z_index = -1
 scale = Vector2(1, 0.973)
 texture = ExtResource("2_10ql6")
 
-[node name="poder" type="RichTextLabel" parent="."]
+[node name="Poder" type="RichTextLabel" parent="."]
 modulate = Color(0, 0, 0, 0)
-z_index = 1
-offset_left = 65.0
-offset_top = -118.0
-offset_right = 113.0
-offset_bottom = -78.0
+z_index = -1
+offset_left = 59.8462
+offset_top = -132.115
+offset_right = 107.846
+offset_bottom = -72.1154
+theme_override_font_sizes/normal_font_size = 39
 text = "0"
 
 [node name="AnimeLogo" type="Sprite2D" parent="."]
@@ -235,7 +236,7 @@ libraries = {
 [node name="CardBack" type="Sprite2D" parent="."]
 position = Vector2(-1.69211, -0.000976563)
 scale = Vector2(1.06838, 1)
-texture = ExtResource("4_x0lbm")
+texture = ExtResource("4_rur0j")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 8

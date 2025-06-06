@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nsifq1arsptq"
-path="res://.godot/imported/DragonBallLogo.png-7310f29589a34cbbbb06fec02f0d96e5.ctex"
+uid="uid://dy6vqdena5xc"
+path="res://.godot/imported/Freeza.jpg-3fc9c81343ad8956a9b3ab4ab5714278.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImage/DragonBallLogo.png"
-dest_files=["res://.godot/imported/DragonBallLogo.png-7310f29589a34cbbbb06fec02f0d96e5.ctex"]
+source_file="res://Assets/CardsImage/Freeza.jpg"
+dest_files=["res://.godot/imported/Freeza.jpg-3fc9c81343ad8956a9b3ab4ab5714278.ctex"]
 
 [params]
 

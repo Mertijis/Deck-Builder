@@ -1,10 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://5vbjliw2l7e8"]
+[gd_scene load_steps=15 format=3 uid="uid://5vbjliw2l7e8"]
 
 [ext_resource type="Script" path="res://Scripts/CardManager.gd" id="1_wlmex"]
 [ext_resource type="Script" path="res://Scripts/cardSlot.gd" id="3_kub73"]
 [ext_resource type="PackedScene" uid="uid://cd1tn7hql8jr3" path="res://Scenes/card_slot.tscn" id="3_ofvjh"]
+[ext_resource type="Texture2D" uid="uid://xvi8qmwdkrte" path="res://Assets/BackCard.png" id="4_gpfhb"]
 [ext_resource type="Script" path="res://Scripts/PlayerHand.gd" id="4_r8b0q"]
-[ext_resource type="Texture2D" uid="uid://cpn1jtkuf0gs1" path="res://Assets/Deck.png" id="5_3bfwp"]
 [ext_resource type="Script" path="res://Scripts/Deck.gd" id="5_ih1bc"]
 [ext_resource type="Script" path="res://Scripts/InputManager.gd" id="6_gs2qo"]
 [ext_resource type="PackedScene" uid="uid://cjprruufasp1k" path="res://Scenes/enemy_card_slot.tscn" id="8_w23cf"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://Scripts/battleManager.gd" id="10_x863k"]
 [ext_resource type="Script" path="res://Scripts/EnemyHand.gd" id="11_62wo1"]
 [ext_resource type="Texture2D" uid="uid://dbixkimpmm0lt" path="res://Assets/CardSlot.png" id="12_yqi8l"]
+[ext_resource type="PackedScene" uid="uid://8sqv6uqithve" path="res://Scenes/telaDerrota.tscn" id="13_5bpn3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_skt2e"]
 size = Vector2(180, 266)
@@ -31,7 +32,7 @@ script = ExtResource("5_ih1bc")
 
 [node name="Sprite2D" type="Sprite2D" parent="Deck"]
 z_index = -2
-texture = ExtResource("5_3bfwp")
+texture = ExtResource("4_gpfhb")
 
 [node name="Area2D" type="Area2D" parent="Deck"]
 collision_layer = 4
@@ -119,7 +120,7 @@ scale = Vector2(0.65, 0.65)
 
 [node name="Sprite2D" type="Sprite2D" parent="EnemyDeck/Deck"]
 z_index = -2
-texture = ExtResource("5_3bfwp")
+texture = ExtResource("4_gpfhb")
 
 [node name="EnemyText" type="RichTextLabel" parent="EnemyDeck/Deck"]
 modulate = Color(0, 0, 0, 1)
@@ -167,5 +168,10 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Sprite2D" type="Sprite2D" parent="EnemyDiscard"]
 texture = ExtResource("12_yqi8l")
+
+[node name="Tela Derrota" parent="." instance=ExtResource("13_5bpn3")]
+visible = false
+z_index = 10
+position = Vector2(960, 540)
 
 [connection signal="pressed" from="EndTurnButton" to="battleManager" method="_on_end_turn_button_pressed"]

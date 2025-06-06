@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nsifq1arsptq"
-path="res://.godot/imported/DragonBallLogo.png-7310f29589a34cbbbb06fec02f0d96e5.ctex"
+uid="uid://6obhi0wqeen0"
+path="res://.godot/imported/Rock.jpg-d5cd62caa5ae0abb369dc8eb5a05d00e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImage/DragonBallLogo.png"
-dest_files=["res://.godot/imported/DragonBallLogo.png-7310f29589a34cbbbb06fec02f0d96e5.ctex"]
+source_file="res://Assets/CardsImage/Rock.jpg"
+dest_files=["res://.godot/imported/Rock.jpg-d5cd62caa5ae0abb369dc8eb5a05d00e.ctex"]
 
 [params]
 

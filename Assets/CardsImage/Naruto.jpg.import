@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nsifq1arsptq"
-path="res://.godot/imported/DragonBallLogo.png-7310f29589a34cbbbb06fec02f0d96e5.ctex"
+uid="uid://dp4kur8i84xs"
+path="res://.godot/imported/Naruto.jpg-b5ac758dd3d68d35fa5a2fba29965b63.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImage/DragonBallLogo.png"
-dest_files=["res://.godot/imported/DragonBallLogo.png-7310f29589a34cbbbb06fec02f0d96e5.ctex"]
+source_file="res://Assets/CardsImage/Naruto.jpg"
+dest_files=["res://.godot/imported/Naruto.jpg-b5ac758dd3d68d35fa5a2fba29965b63.ctex"]
 
 [params]
 

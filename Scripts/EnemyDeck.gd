@@ -4,14 +4,19 @@ const CARD_SCENE_PATH = "res://Scenes/Enemycard.tscn"
 const CARD_DRAW_SPEED = 0.2
 const START_CARDS = 4
 
-var enemy_deck = ["Luffy", "Sanji", "Saske", "Ussop", "Vegeta", "Zoro"]
+var enemy_deck = []
 var card_database_reference
+
+func cards_to_deck():
+	for card in card_database_reference.CARDS:
+		enemy_deck.append(card)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	card_database_reference = preload("res://Scripts/CardsDataBase.gd")
+	cards_to_deck()
 	enemy_deck.shuffle()
 	$Deck/EnemyText.text = str(enemy_deck.size())
-	card_database_reference = preload("res://Scripts/CardsDataBase.gd")
 	#Criar loop que distribui 4 cartas de figurante, aleatoriamente
 	for i in range(START_CARDS):
 		draw_card()
@@ -19,7 +24,7 @@ func _ready():
 
 func draw_card():
 	var card_draw_name = enemy_deck[0]
-	var card_anime = card_database_reference.CARDS[card_draw_name][1]
+	var card_anime = card_database_reference.CARDS[card_draw_name][2]
 	enemy_deck.erase(card_draw_name)
 	
 	if enemy_deck.size() == 0:
@@ -37,7 +42,8 @@ func draw_card():
 	new_card.get_node("AnimeLogo").texture = load(card_anime_path)
 	new_card.poder = card_database_reference.CARDS[card_draw_name][0]
 	new_card.vida = card_database_reference.CARDS[card_draw_name][0]
-	new_card.get_node("poder").text = str(new_card.poder)
+	new_card.anime = card_database_reference.CARDS[card_draw_name][1]
+	new_card.get_node("Poder").text = str(new_card.poder)
 	$"../CardManager".add_child(new_card)
 	new_card.name = "Card"
 	$"../Enemyhand".add_card_to_hand(new_card, CARD_DRAW_SPEED)

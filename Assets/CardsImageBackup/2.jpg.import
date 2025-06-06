@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwhtx8na8u2aa"
-path="res://.godot/imported/NarutoLogo.jpg-f689fc7e0b1a9285aa15b15112de4468.ctex"
+uid="uid://b285xrdm5eqbc"
+path="res://.godot/imported/2.jpg-efcb15389190736fbd2bd32c351794ca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImage/NarutoLogo.jpg"
-dest_files=["res://.godot/imported/NarutoLogo.jpg-f689fc7e0b1a9285aa15b15112de4468.ctex"]
+source_file="res://Assets/CardsImageBackup/2.jpg"
+dest_files=["res://.godot/imported/2.jpg-efcb15389190736fbd2bd32c351794ca.ctex"]
 
 [params]
 

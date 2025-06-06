@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ciuqs7a85dtro"
-path="res://.godot/imported/OnePiceLogo.jpg-35d90e79195e602c5fa289ceaef9ed12.ctex"
+uid="uid://cm0473h3r2v1j"
+path="res://.godot/imported/Gaara.jpg-e6ceb7ae41a00faf14b566fbcbc97a20.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImage/OnePiceLogo.jpg"
-dest_files=["res://.godot/imported/OnePiceLogo.jpg-35d90e79195e602c5fa289ceaef9ed12.ctex"]
+source_file="res://Assets/CardsImage/Gaara.jpg"
+dest_files=["res://.godot/imported/Gaara.jpg-e6ceb7ae41a00faf14b566fbcbc97a20.ctex"]
 
 [params]
 

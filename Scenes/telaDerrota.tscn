@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://8sqv6uqithve"]
+
+[ext_resource type="Texture2D" uid="uid://cpn1jtkuf0gs1" path="res://Assets/Deck.png" id="1_xmpj6"]
+
+[node name="Node2D" type="Node2D"]
+scale = Vector2(2, 2)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = ExtResource("1_xmpj6")
+
+[node name="texto" type="RichTextLabel" parent="."]
+offset_left = -102.5
+offset_top = -27.5
+offset_right = 125.5
+offset_bottom = 55.5
+theme_override_font_sizes/normal_font_size = 34
+text = "Voce Perdeu"

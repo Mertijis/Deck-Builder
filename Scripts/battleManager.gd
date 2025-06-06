@@ -7,23 +7,28 @@ const BATTLE_POS_OFFSET = 25
 
 var battle_timer
 var empty_card_slots = []
+var ocupado_card_slot = []
+var enemy_card_slots = []
 var enemy_cards_on_battlefield = []
 var player_cards_on_battlefield = []
 var player_cards_that_attacked_this_turn = []
 var player_health
 var enemy_health
 var is_enemy_turn = false
+var random_empty_card_slots
+var tela_derrota
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	tela_derrota = $"../Tela Derrota".get_node("texto")
 	battle_timer = $"../battleTimer"
 	battle_timer.one_shot = true
 	battle_timer.wait_time = 1.0
 	
-	empty_card_slots.append($"../CardSlots/EnemyCardSlot1")
-	empty_card_slots.append($"../CardSlots/EnemyCardSlot2")
-	empty_card_slots.append($"../CardSlots/EnemyCardSlot3")
-	empty_card_slots.append($"../CardSlots/EnemyCardSlot4")
+	enemy_card_slots.append($"../CardSlots/EnemyCardSlot1")
+	enemy_card_slots.append($"../CardSlots/EnemyCardSlot2")
+	enemy_card_slots.append($"../CardSlots/EnemyCardSlot3")
+	enemy_card_slots.append($"../CardSlots/EnemyCardSlot4")
 	
 	player_health = START_HEALTH
 	$"../PlayerHealth".text = str(player_health)
@@ -40,35 +45,45 @@ func _on_end_turn_button_pressed():
 func opponent_turn():
 	$"../EndTurnButton".disabled = true
 	$"../EndTurnButton".visible = false
-	
-	
-	await  wait(1.0)
-	
+
+	await wait(1.0)
+
+	# Atualiza listas de slots vazios/ocupados
+	empty_card_slots = []
+	ocupado_card_slot = []
+
+	for slot in enemy_card_slots:
+		if slot.card_in_slot == false:
+			empty_card_slots.append(slot)
+		else:
+			ocupado_card_slot.append(slot)
+
+	# Puxa 1 carta do baralho (se houver)
 	if $"../EnemyDeck".enemy_deck.size() != 0:
 		$"../EnemyDeck".draw_card()
 		await wait(1.0)
-	
-	#check if slots are empty
-	if empty_card_slots.size() != 0:
+
+	# Joga APENAS 1 CARTA (se houver slots vazios)
+	if empty_card_slots.size() > 0 and $"../Enemyhand".enemy_hand.size() > 0:
 		await try_play_card_with_highest_attack()
-	
-	
+		await wait(1.0)
+
+	# Ataques com cartas no campo
 	if enemy_cards_on_battlefield.size() != 0:
 		var enemy_cards_to_attack = enemy_cards_on_battlefield.duplicate()
 		for card in enemy_cards_to_attack:
-			if player_cards_on_battlefield.size() != 0:
-				var card_to_attack = player_cards_on_battlefield.pick_random()
-				await attack(card, card_to_attack, "enemy")
-			else:
-				await direct_attack(card, "enemy")
+			if is_instance_valid(card) and card.poder > 0:
+				if player_cards_on_battlefield.size() != 0:
+					var card_to_attack = player_cards_on_battlefield.pick_random()
+					if is_instance_valid(card_to_attack):
+						await attack(card, card_to_attack, "enemy")
+				else:
+					await direct_attack(card, "enemy")
 	
-	
-	
-	#end Turn
 	end_oponent_turn()
-	
-	
+
 func direct_attack(attacking_card, attacker):
+	
 	var new_pos_y
 	if attacker == "enemy":
 		new_pos_y = 1080
@@ -86,10 +101,13 @@ func direct_attack(attacking_card, attacker):
 	if attacker == "enemy":
 		player_health = max(0, player_health - attacking_card.poder)
 		$"../PlayerHealth".text = str(player_health)
+		if player_health == 0:
+			lose("player")
 	else:
 		enemy_health = max(0, enemy_health - attacking_card.poder)
 		$"../EnemyHealth".text = str(enemy_health)
-	
+		if enemy_health == 0:
+			lose("enemy")
 	
 	var tween2 = get_tree().create_tween()
 	tween2.tween_property(attacking_card, "position", attacking_card.card_slot_card_in.position, CARD_MOVE_SPEED)
@@ -98,6 +116,11 @@ func direct_attack(attacking_card, attacker):
 	
 
 func attack(attacking_card, defendign_card, attacker):
+	
+	apply_type_advantage(attacking_card, defendign_card)
+	attacking_card.vida = attacking_card.poder
+	defendign_card.vida = defendign_card.poder
+	
 	if attacker == "player":
 		$"../CardManager".selected_card = null
 		player_cards_that_attacked_this_turn.append(attacking_card)
@@ -114,16 +137,11 @@ func attack(attacking_card, defendign_card, attacker):
 	defendign_card.vida = max(0, (defendign_card.vida - attacking_card.poder))
 	attacking_card.vida = max(0, (attacking_card.vida - defendign_card.poder))
 	
-	#defendign_card.get_node("Poder").text = str(defendign_card.vida)
-	#attacking_card.get_node("Poder").text = str(attacking_card.vida)
+	defendign_card.get_node("Poder").text = str(defendign_card.vida)
+	attacking_card.get_node("Poder").text = str(attacking_card.vida)
 	
 	defendign_card.poder = defendign_card.vida
 	attacking_card.poder = attacking_card.vida
-	
-	if attacking_card.poder == null:
-		attacking_card.poder = 0
-	
-	#attacking_card.get_node("Poder").text = str(attacking_card.poder)
 	
 	await wait(1.0)
 	attacking_card.z_index = 0
@@ -142,21 +160,66 @@ func attack(attacking_card, defendign_card, attacker):
 	if card_was_destroyed:
 		await wait(1.0)
 
+func apply_type_advantage(attacking_card, defending_card):
+	# 1 - One Pice
+	# 2 - Naruto
+	# 3 - Dragon Ball
+	
+	# Verifica as condições de vantagem
+	if attacking_card.anime == 1 and defending_card.anime == 3:
+		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
+		#print("Ataque Forte: One Piece > Dragon Ball - Poder aumentado para ", attacking_card.poder)
+	
+	elif attacking_card.anime  == 2 and defending_card.anime == 1:
+		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
+		#print("Ataque Forte: Naruto > One Piece - Poder aumentado para ", attacking_card.poder)
+	
+	elif attacking_card.anime  == 3 and defending_card.anime == 2:
+		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
+		#print("Ataque Forte: Dragon Ball > Naruto - Poder aumentado para ", attacking_card.poder)
+	
+	# Aplica vantagem na DEFESA (contra-ataque)
+	elif defending_card.anime == 1 and attacking_card.anime  == 3:
+		defending_card.poder = int(ceil(defending_card.poder * 1.5))
+		#print("Defesa Forte: One Piece > Dragon Ball - Poder de defesa aumentado para ", defending_card.poder)
+	
+	elif defending_card.anime == 2 and attacking_card.anime  == 1:
+		defending_card.poder = ceil(ceil(defending_card.poder * 1.5))
+		#print("Defesa Forte: Naruto > One Piece - Poder de defesa aumentado para ", defending_card.poder)
+	
+	elif defending_card.anime == 3 and attacking_card.anime  == 2:
+		defending_card.poder = int(ceil(defending_card.poder * 1.5))
+		#print("Defesa Forte: Dragon Ball > Naruto - Poder de defesa aumentado para ", defending_card.poder)
+
+
 func destroy_card(card, card_owner):
-	var new_pos
+	if !is_instance_valid(card):
+		return
+	
+	var slot_to_free = card.card_slot_card_in
+	
 	if card_owner == "player":
 		card.get_node("Area2D/CollisionShape2D").disabled = true
-		new_pos = $"../PlayerDiscard".position
 		if card in player_cards_on_battlefield:
 			player_cards_on_battlefield.erase(card)
-		card.card_slot_card_in.get_node("Area2D/CollisionShape2D").disabled = false
+		if slot_to_free:
+			slot_to_free.get_node("Area2D/CollisionShape2D").disabled = false
 	else:
-		new_pos = $"../EnemyDiscard".position
 		if card in enemy_cards_on_battlefield:
 			enemy_cards_on_battlefield.erase(card)
+		if slot_to_free and slot_to_free in ocupado_card_slot:
+			ocupado_card_slot.erase(slot_to_free)
 	
-	card.card_slot_card_in.card_in_slot = false
-	card.card_slot_card_in = null
+	if slot_to_free:
+		slot_to_free.card_in_slot = false
+		if slot_to_free not in empty_card_slots:
+			empty_card_slots.append(slot_to_free)
+	
+	var new_pos
+	if card_owner == "player":
+		new_pos = $"../PlayerDiscard".position
+	else:
+		new_pos = $"../EnemyDiscard".position
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_pos, CARD_MOVE_SPEED)
@@ -167,42 +230,44 @@ func enemy_card_selected(defending_card):
 	if attacking_card and defending_card in enemy_cards_on_battlefield:
 		attack(attacking_card, defending_card, "player")
 
-
-
 func try_play_card_with_highest_attack():
 	var enemy_hands = $"../Enemyhand".enemy_hand
 	if enemy_hands.size() == 0:
-		end_oponent_turn()
 		return
-		
-	
-	var random_empty_card_slots = empty_card_slots.pick_random()
+
+	# Escolhe um slot vazio aleatório
+	random_empty_card_slots = empty_card_slots.pick_random()
+	if !random_empty_card_slots:
+		return
+
+	# Marca slot como ocupado e atualiza listas
+	random_empty_card_slots.card_in_slot = true
 	empty_card_slots.erase(random_empty_card_slots)
-	
-	
+	ocupado_card_slot.append(random_empty_card_slots)
+
+	# Encontra carta com maior ataque na mão
 	var card_with_highest_atk = enemy_hands[0]
 	for card in enemy_hands:
 		if card.poder > card_with_highest_atk.poder:
 			card_with_highest_atk = card
-	
+
+	# Move a carta para o slot
 	var tween = get_tree().create_tween()
 	tween.tween_property(card_with_highest_atk, "position", random_empty_card_slots.position, CARD_MOVE_SPEED)
-	var tween2 = get_tree().create_tween()
-	tween2.tween_property(card_with_highest_atk, "scale", Vector2(CARD_SMALLER_SCALE, CARD_SMALLER_SCALE), CARD_MOVE_SPEED)
+	tween.parallel().tween_property(card_with_highest_atk, "scale", Vector2(CARD_SMALLER_SCALE, CARD_SMALLER_SCALE), CARD_MOVE_SPEED)
 	card_with_highest_atk.get_node("AnimationPlayer").play("RESET")
-	
+
+	# Atualiza referências
 	$"../Enemyhand".remove_card_from_hand(card_with_highest_atk)
 	card_with_highest_atk.card_slot_card_in = random_empty_card_slots
 	enemy_cards_on_battlefield.append(card_with_highest_atk)
-	
-	await wait(1.0)
 
+	await wait(1.0)
 
 func wait(wait_time):
 	battle_timer.wait_time = wait_time
 	battle_timer.start()
 	await battle_timer.timeout
-
 
 func end_oponent_turn():
 	$"../Deck".reset_draw()
@@ -210,3 +275,17 @@ func end_oponent_turn():
 	is_enemy_turn =  false
 	$"../EndTurnButton".disabled = false
 	$"../EndTurnButton".visible = true
+
+func lose(loser):
+	await wait(1.0)
+	if loser == "player":
+		$"../Tela Derrota".visible = true
+		tela_derrota.text = "Você Perdeu"
+		await  wait(5.0)
+		get_tree().reload_current_scene()
+	else:
+		$"../Tela Derrota".visible = true
+		tela_derrota.text = "Você Ganhou"
+		$"../EndTurnButton".disabled = true
+		await  wait(5.0)
+		get_tree().reload_current_scene()

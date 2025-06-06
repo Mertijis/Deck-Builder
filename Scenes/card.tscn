@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://e2at432l01ob"]
 
 [ext_resource type="Script" path="res://Scripts/card.gd" id="1_7gwbj"]
-[ext_resource type="Texture2D" uid="uid://bhogpqwlpt3ro" path="res://Assets/CardsImage/Luffy.jpg" id="2_c7xkk"]
-[ext_resource type="Texture2D" uid="uid://bd5cfawy68rlh" path="res://Assets/CardsImage/OnePiceLogo.png" id="3_0jcl7"]
-[ext_resource type="Texture2D" uid="uid://cpn1jtkuf0gs1" path="res://Assets/Deck.png" id="4_7ttqj"]
+[ext_resource type="Texture2D" uid="uid://cvi6gdshpvhq6" path="res://Assets/CardsImage/Luffy.jpg" id="2_c7xkk"]
+[ext_resource type="Texture2D" uid="uid://bf2is2k6fch4f" path="res://Assets/CardsImage/OnePiceLogo.png" id="3_0jcl7"]
+[ext_resource type="Texture2D" uid="uid://xvi8qmwdkrte" path="res://Assets/BackCard.png" id="4_2xndj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xxgll"]
 size = Vector2(189, 259)
@@ -182,9 +182,8 @@ scale = Vector2(0.65, 0.65)
 script = ExtResource("1_7gwbj")
 
 [node name="CardImage" type="Sprite2D" parent="."]
-z_index = -1
+z_index = 1
 position = Vector2(0.288386, 2.98077)
-scale = Vector2(1, 0.973)
 texture = ExtResource("2_c7xkk")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -194,19 +193,19 @@ position = Vector2(-0.5, -0.500061)
 shape = SubResource("RectangleShape2D_xxgll")
 
 [node name="Poder" type="RichTextLabel" parent="."]
-modulate = Color(0, 0, 0, 0)
-z_index = -1
-offset_left = 65.0
-offset_top = -118.0
-offset_right = 113.0
-offset_bottom = -78.0
+modulate = Color(0, 0, 0, 1)
+z_index = 1
+offset_left = 58.0
+offset_top = -126.0
+offset_right = 119.0
+offset_bottom = -64.0
+theme_override_font_sizes/normal_font_size = 39
 text = "0"
 
 [node name="AnimeLogo" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 1, 0)
-z_index = -1
+z_index = 1
 position = Vector2(-0.76924, 84.6152)
-scale = Vector2(0.0251177, 0.172096)
+scale = Vector2(0.209315, 0.172096)
 texture = ExtResource("3_0jcl7")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -215,9 +214,9 @@ libraries = {
 }
 
 [node name="CardBack" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(3.05176e-05, 6.51062)
-scale = Vector2(1.06838, 1)
-texture = ExtResource("4_7ttqj")
+texture = ExtResource("4_2xndj")
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
