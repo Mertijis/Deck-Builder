@@ -270,11 +270,11 @@ func wait(wait_time):
 	await battle_timer.timeout
 
 func end_oponent_turn():
-	$"../Deck".reset_draw()
-	$"../CardManager".reset_played_card()
 	is_enemy_turn =  false
 	$"../EndTurnButton".disabled = false
 	$"../EndTurnButton".visible = true
+	$"../CardManager".reset_played_card()
+	$"../Deck".reset_draw()
 
 func lose(loser):
 	await wait(1.0)
