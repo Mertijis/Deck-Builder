@@ -182,8 +182,9 @@ scale = Vector2(0.65, 0.65)
 script = ExtResource("1_7gwbj")
 
 [node name="CardImage" type="Sprite2D" parent="."]
-z_index = 1
+z_index = -1
 position = Vector2(0.288386, 2.98077)
+scale = Vector2(1, 0.973)
 texture = ExtResource("2_c7xkk")
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -193,8 +194,8 @@ position = Vector2(-0.5, -0.500061)
 shape = SubResource("RectangleShape2D_xxgll")
 
 [node name="Poder" type="RichTextLabel" parent="."]
-modulate = Color(0, 0, 0, 1)
-z_index = 1
+modulate = Color(0, 0, 0, 0)
+z_index = -1
 offset_left = 58.0
 offset_top = -126.0
 offset_right = 119.0
@@ -203,9 +204,10 @@ theme_override_font_sizes/normal_font_size = 39
 text = "0"
 
 [node name="AnimeLogo" type="Sprite2D" parent="."]
-z_index = 1
+modulate = Color(1, 1, 1, 0)
+z_index = -1
 position = Vector2(-0.76924, 84.6152)
-scale = Vector2(0.209315, 0.172096)
+scale = Vector2(0.0251177, 0.172096)
 texture = ExtResource("3_0jcl7")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -216,6 +218,7 @@ libraries = {
 [node name="CardBack" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(3.05176e-05, 6.51062)
+scale = Vector2(1.06838, 1)
 texture = ExtResource("4_2xndj")
 
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]

@@ -73,6 +73,7 @@ func finish_drag():
 			card_slot_found.card_in_slot = true
 			card_slot_found.get_node("Area2D/CollisionShape2D").disabled = true
 			$"../battleManager".player_cards_on_battlefield.append(card_being_dragged)
+			$"../battleManager".player_cards_that_attacked_this_turn.append(card_being_dragged)
 			card_being_dragged = null
 			return
 	else:

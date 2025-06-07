@@ -6,6 +6,7 @@ signal hovered_off
 var starting_position
 var card_slot_card_in
 var poder
+var poder_original
 var vida
 var anime
 

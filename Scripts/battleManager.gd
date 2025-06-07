@@ -12,6 +12,7 @@ var enemy_card_slots = []
 var enemy_cards_on_battlefield = []
 var player_cards_on_battlefield = []
 var player_cards_that_attacked_this_turn = []
+var enemy_cards_that_attacked_this_tur = []
 var player_health
 var enemy_health
 var is_enemy_turn = false
@@ -36,6 +37,7 @@ func _ready():
 	$"../EnemyHealth".text = str(enemy_health)
 
 func _on_end_turn_button_pressed():
+	#$"../Deck".draw_card()
 	is_enemy_turn = true
 	$"../CardManager".unselect_select_card()
 	player_cards_that_attacked_this_turn = []
@@ -72,13 +74,15 @@ func opponent_turn():
 	if enemy_cards_on_battlefield.size() != 0:
 		var enemy_cards_to_attack = enemy_cards_on_battlefield.duplicate()
 		for card in enemy_cards_to_attack:
-			if is_instance_valid(card) and card.poder > 0:
-				if player_cards_on_battlefield.size() != 0:
-					var card_to_attack = player_cards_on_battlefield.pick_random()
-					if is_instance_valid(card_to_attack):
-						await attack(card, card_to_attack, "enemy")
-				else:
-					await direct_attack(card, "enemy")
+			if card not in enemy_cards_that_attacked_this_tur:
+				if is_instance_valid(card) and card.poder > 0:
+					if player_cards_on_battlefield.size() != 0:
+						var card_to_attack = player_cards_on_battlefield.pick_random()
+						if is_instance_valid(card_to_attack):
+							await attack(card, card_to_attack, "enemy")
+							enemy_cards_that_attacked_this_tur.append(card)
+					else:
+						await direct_attack(card, "enemy")
 	
 	end_oponent_turn()
 
@@ -166,28 +170,28 @@ func apply_type_advantage(attacking_card, defending_card):
 	# 3 - Dragon Ball
 	
 	# Verifica as condições de vantagem
-	if attacking_card.anime == 1 and defending_card.anime == 3:
+	if attacking_card.anime == 1 and defending_card.anime == 2:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
 		#print("Ataque Forte: One Piece > Dragon Ball - Poder aumentado para ", attacking_card.poder)
 	
-	elif attacking_card.anime  == 2 and defending_card.anime == 1:
+	elif attacking_card.anime  == 2 and defending_card.anime == 3:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
 		#print("Ataque Forte: Naruto > One Piece - Poder aumentado para ", attacking_card.poder)
 	
-	elif attacking_card.anime  == 3 and defending_card.anime == 2:
+	elif attacking_card.anime  == 3 and defending_card.anime == 1:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
 		#print("Ataque Forte: Dragon Ball > Naruto - Poder aumentado para ", attacking_card.poder)
 	
 	# Aplica vantagem na DEFESA (contra-ataque)
-	elif defending_card.anime == 1 and attacking_card.anime  == 3:
+	elif defending_card.anime == 1 and attacking_card.anime  == 2:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
 		#print("Defesa Forte: One Piece > Dragon Ball - Poder de defesa aumentado para ", defending_card.poder)
 	
-	elif defending_card.anime == 2 and attacking_card.anime  == 1:
+	elif defending_card.anime == 2 and attacking_card.anime  == 3:
 		defending_card.poder = ceil(ceil(defending_card.poder * 1.5))
 		#print("Defesa Forte: Naruto > One Piece - Poder de defesa aumentado para ", defending_card.poder)
 	
-	elif defending_card.anime == 3 and attacking_card.anime  == 2:
+	elif defending_card.anime == 3 and attacking_card.anime  == 1:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
 		#print("Defesa Forte: Dragon Ball > Naruto - Poder de defesa aumentado para ", defending_card.poder)
 
@@ -261,6 +265,7 @@ func try_play_card_with_highest_attack():
 	$"../Enemyhand".remove_card_from_hand(card_with_highest_atk)
 	card_with_highest_atk.card_slot_card_in = random_empty_card_slots
 	enemy_cards_on_battlefield.append(card_with_highest_atk)
+	enemy_cards_that_attacked_this_tur.append(card_with_highest_atk)
 
 	await wait(1.0)
 
@@ -275,6 +280,8 @@ func end_oponent_turn():
 	$"../EndTurnButton".visible = true
 	$"../CardManager".reset_played_card()
 	$"../Deck".reset_draw()
+	$"../Deck".draw_card()
+	enemy_cards_that_attacked_this_tur = []
 
 func lose(loser):
 	await wait(1.0)

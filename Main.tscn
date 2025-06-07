@@ -43,10 +43,10 @@ shape = SubResource("RectangleShape2D_skt2e")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Deck"]
 modulate = Color(0, 0, 0, 1)
-offset_left = -9.0
-offset_top = -28.0
-offset_right = 31.0
-offset_bottom = 12.0
+offset_left = -9.23076
+offset_top = -44.6154
+offset_right = 30.7692
+offset_bottom = -4.61536
 scale = Vector2(2, 2)
 text = "0"
 
@@ -105,10 +105,11 @@ script = ExtResource("3_kub73")
 
 [node name="EndTurnButton" type="Button" parent="."]
 z_index = -1
-offset_left = 358.0
-offset_top = 434.0
-offset_right = 471.0
-offset_bottom = 489.0
+offset_left = 1618.0
+offset_top = 856.0
+offset_right = 1731.0
+offset_bottom = 911.0
+scale = Vector2(1.9559, 1.9559)
 text = "End Turn"
 
 [node name="EnemyDeck" type="Node2D" parent="."]
@@ -124,10 +125,10 @@ texture = ExtResource("4_gpfhb")
 
 [node name="EnemyText" type="RichTextLabel" parent="EnemyDeck/Deck"]
 modulate = Color(0, 0, 0, 1)
-offset_left = -9.0
-offset_top = -28.0
-offset_right = 31.0
-offset_bottom = 12.0
+offset_left = -14.0
+offset_top = -24.4231
+offset_right = 26.0
+offset_bottom = 15.5769
 scale = Vector2(2, 2)
 text = "0"
 
@@ -140,19 +141,19 @@ script = ExtResource("10_x863k")
 script = ExtResource("11_62wo1")
 
 [node name="PlayerHealth" type="RichTextLabel" parent="."]
-offset_left = 391.0
-offset_top = 486.0
-offset_right = 431.0
-offset_bottom = 526.0
-scale = Vector2(2, 2)
+offset_left = 109.0
+offset_top = 718.0
+offset_right = 149.0
+offset_bottom = 758.0
+scale = Vector2(4.04799, 4.04799)
 text = "0"
 
 [node name="EnemyHealth" type="RichTextLabel" parent="."]
-offset_left = 391.0
-offset_top = 385.0
-offset_right = 431.0
-offset_bottom = 425.0
-scale = Vector2(2, 2)
+offset_left = 1714.0
+offset_top = 240.0
+offset_right = 1754.0
+offset_bottom = 280.0
+scale = Vector2(4.03736, 4.03736)
 text = "0"
 
 [node name="PlayerDiscard" type="Node2D" parent="."]

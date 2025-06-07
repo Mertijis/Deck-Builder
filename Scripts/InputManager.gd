@@ -36,8 +36,8 @@ func raycast_at_cursor():
 			var card_found = result[0].collider.get_parent()
 			if card_found:
 				card_manager_reference.card_clicked(card_found)
-		elif result_collision_mask == COLLISION_MASK_DECK:
-			deck_reference.draw_card()
+		#elif result_collision_mask == COLLISION_MASK_DECK:
+			#deck_reference.draw_card()
 		elif result_collision_mask == COLLISION_MASK_ENEMY_CARD:
 			$"../battleManager".enemy_card_selected(result[0].collider.get_parent())
 		#elif result_collision_mask == COLLISION_MASK_CARD_SLOT_ENEMY:

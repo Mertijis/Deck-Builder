@@ -41,6 +41,7 @@ func draw_card():
 	new_card.get_node("CardImage").texture = load(card_image_path)
 	new_card.get_node("AnimeLogo").texture = load(card_anime_path)
 	new_card.poder = card_database_reference.CARDS[card_draw_name][0]
+	new_card.poder_original = card_database_reference.CARDS[card_draw_name][0]
 	new_card.vida = card_database_reference.CARDS[card_draw_name][0]
 	new_card.anime = card_database_reference.CARDS[card_draw_name][1]
 	new_card.get_node("Poder").text = str(new_card.poder)
