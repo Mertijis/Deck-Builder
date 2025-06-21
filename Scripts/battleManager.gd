@@ -18,6 +18,7 @@ var enemy_health
 var is_enemy_turn = false
 var random_empty_card_slots
 var tela_derrota
+var played_card_this_turn = false  # Adicionado para controlar jogadas por turno
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -41,9 +42,12 @@ func _on_end_turn_button_pressed():
 	is_enemy_turn = true
 	$"../CardManager".unselect_select_card()
 	player_cards_that_attacked_this_turn = []
+	played_card_this_turn = false  # Resetar ao iniciar turno inimigo
 	opponent_turn()
 	
-	
+func reset_played_card():
+	played_card_this_turn = false
+
 func opponent_turn():
 	$"../EndTurnButton".disabled = true
 	$"../EndTurnButton".visible = false
@@ -126,7 +130,7 @@ func attack(attacking_card, defendign_card, attacker):
 	defendign_card.vida = defendign_card.poder
 	
 	if attacker == "player":
-		$"../CardManager".selected_card = null
+		$"../CardManager".selected_card_for_attack = null  # Desseleciona após ataque
 		player_cards_that_attacked_this_turn.append(attacking_card)
 	
 	attacking_card.z_index = 5
@@ -169,31 +173,35 @@ func apply_type_advantage(attacking_card, defending_card):
 	# 2 - Naruto
 	# 3 - Dragon Ball
 	
-	# Verifica as condições de vantagem
+	# Guarda valores originais
+	var original_attacker_power = attacking_card.poder
+	var original_defender_power = defending_card.poder
+	
+	# Aplica vantagem de ataque
 	if attacking_card.anime == 1 and defending_card.anime == 2:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
-		#print("Ataque Forte: One Piece > Dragon Ball - Poder aumentado para ", attacking_card.poder)
 	
 	elif attacking_card.anime  == 2 and defending_card.anime == 3:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
-		#print("Ataque Forte: Naruto > One Piece - Poder aumentado para ", attacking_card.poder)
 	
 	elif attacking_card.anime  == 3 and defending_card.anime == 1:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
-		#print("Ataque Forte: Dragon Ball > Naruto - Poder aumentado para ", attacking_card.poder)
 	
 	# Aplica vantagem na DEFESA (contra-ataque)
-	elif defending_card.anime == 1 and attacking_card.anime  == 2:
+	if defending_card.anime == 1 and attacking_card.anime  == 2:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
-		#print("Defesa Forte: One Piece > Dragon Ball - Poder de defesa aumentado para ", defending_card.poder)
 	
 	elif defending_card.anime == 2 and attacking_card.anime  == 3:
 		defending_card.poder = ceil(ceil(defending_card.poder * 1.5))
-		#print("Defesa Forte: Naruto > One Piece - Poder de defesa aumentado para ", defending_card.poder)
 	
 	elif defending_card.anime == 3 and attacking_card.anime  == 1:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
-		#print("Defesa Forte: Dragon Ball > Naruto - Poder de defesa aumentado para ", defending_card.poder)
+	
+	# Restaura valores após a batalha
+	attacking_card.vida = attacking_card.poder
+	defending_card.vida = defending_card.poder
+	attacking_card.poder = original_attacker_power
+	defending_card.poder = original_defender_power
 
 
 func destroy_card(card, card_owner):
@@ -228,11 +236,6 @@ func destroy_card(card, card_owner):
 	var tween = get_tree().create_tween()
 	tween.tween_property(card, "position", new_pos, CARD_MOVE_SPEED)
 	await wait(0.15)
-
-func enemy_card_selected(defending_card):
-	var attacking_card = $"../CardManager".selected_card
-	if attacking_card and defending_card in enemy_cards_on_battlefield:
-		attack(attacking_card, defending_card, "player")
 
 func try_play_card_with_highest_attack():
 	var enemy_hands = $"../Enemyhand".enemy_hand
@@ -273,6 +276,11 @@ func wait(wait_time):
 	battle_timer.wait_time = wait_time
 	battle_timer.start()
 	await battle_timer.timeout
+	
+func enemy_card_selected(defending_card):
+	var attacking_card = $"../CardManager".selected_card_for_attack
+	if attacking_card and defending_card in enemy_cards_on_battlefield:
+		attack(attacking_card, defending_card, "player")
 
 func end_oponent_turn():
 	is_enemy_turn =  false
@@ -296,3 +304,19 @@ func lose(loser):
 		$"../EndTurnButton".disabled = true
 		await  wait(5.0)
 		get_tree().reload_current_scene()
+
+# Nova função para posicionar carta no campo
+func place_card_on_slot(card, card_slot):
+	if played_card_this_turn:
+		return false
+	
+	played_card_this_turn = true
+	card.z_index = 0
+	card.card_slot_card_in = card_slot
+	card_slot.card_in_slot = true
+	card_slot.get_node("Area2D/CollisionShape2D").disabled = true
+	
+	player_cards_on_battlefield.append(card)
+	player_cards_that_attacked_this_turn.append(card)
+	
+	return true

@@ -11,7 +11,8 @@ var card_being_dragged
 var is_hovering_on_card
 var player_hand_reference
 var played_card_this_turn = false
-var selected_card
+var selected_card_for_attack  # Renomeado para maior clareza
+var selected_card_for_placement  # Nova variável para carta selecionada para posicionamento
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -30,6 +31,7 @@ func _process(delta):
 
 func card_clicked(card):
 	if card.card_slot_card_in:
+		# Carta já está no campo de batalha
 		if $"../battleManager".is_enemy_turn == false:
 			if card not in $"../battleManager".player_cards_that_attacked_this_turn:
 				if $"../battleManager".enemy_cards_on_battlefield.size() == 0:
@@ -38,22 +40,70 @@ func card_clicked(card):
 				else: 
 					select_card_for_battle(card)
 	else:
-		start_drag(card)
+		# Carta está na mão - seleciona para posicionamento
+		select_card_for_placement(card)
+
+
+func select_card_for_placement(card):
+	# Desseleciona qualquer carta anterior
+	if selected_card_for_placement:
+		selected_card_for_placement.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
+		selected_card_for_placement.z_index = 1
+	
+	# Seleciona a nova carta
+	selected_card_for_placement = card
+	card.scale = Vector2(HOVERD_CARD_SIZE, HOVERD_CARD_SIZE)
+	card.z_index = 3  # Coloca acima de outras cartas
+	card.position.y -= 20  # Move ligeiramente para cima como feedback visual
 
 
 func select_card_for_battle(card):
-	if selected_card:
-		if selected_card == card:
+	# Desseleciona carta de posicionamento se houver
+	if selected_card_for_placement:
+		selected_card_for_placement.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
+		selected_card_for_placement.z_index = 1
+		selected_card_for_placement = null
+	
+	# Seleciona carta para batalha
+	if selected_card_for_attack:
+		if selected_card_for_attack == card:
 			card.position.y += 20
-			selected_card = null
+			selected_card_for_attack = null
 		else:
-			selected_card.position.y += 20
-			selected_card = card
+			selected_card_for_attack.position.y += 20
+			selected_card_for_attack = card
 			card.position.y -= 20
 	else:
-		selected_card = card
+		selected_card_for_attack = card
 		card.position.y -= 20
-	
+
+
+func place_selected_card_on_slot(card_slot):
+	if selected_card_for_placement and !played_card_this_turn:
+		var card = selected_card_for_placement
+		played_card_this_turn = true
+		
+		# Posiciona a carta no slot
+		card.z_index = 0  # Volta ao z-index normal
+		card.card_slot_card_in = card_slot
+		player_hand_reference.remove_card_from_hand(card)
+		card.position = card_slot.position
+		card.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
+		
+		# Atualiza o slot
+		card_slot.card_in_slot = true
+		card_slot.get_node("Area2D/CollisionShape2D").disabled = true
+		
+		# Atualiza o gerenciador de batalha
+		$"../battleManager".player_cards_on_battlefield.append(card)
+		$"../battleManager".player_cards_that_attacked_this_turn.append(card)
+		
+		# Limpa seleção
+		selected_card_for_placement = null
+		return true
+	return false
+
+
 func start_drag(card):
 	card_being_dragged = card
 	card.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
@@ -81,9 +131,15 @@ func finish_drag():
 		card_being_dragged = null
 
 func unselect_select_card():
-	if selected_card:
-		selected_card.position.y += 20
-		selected_card = null
+	# Desseleciona ambos os tipos de seleção
+	if selected_card_for_attack:
+		selected_card_for_attack.position.y += 20
+		selected_card_for_attack = null
+		
+	if selected_card_for_placement:
+		selected_card_for_placement.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
+		selected_card_for_placement.z_index = 1
+		selected_card_for_placement = null
 
 func connect_card_signals(card):
 	card.connect("hovered", on_hovered_over_card)
@@ -92,16 +148,21 @@ func connect_card_signals(card):
 func on_left_click_released():
 	if card_being_dragged:
 		finish_drag()
+	else:
+		# Verifica se clicou em um slot com uma carta selecionada para posicionamento
+		var card_slot_found = raycast_check_for_card_slot()
+		if card_slot_found and selected_card_for_placement:
+			place_selected_card_on_slot(card_slot_found)
 
 func on_hovered_over_card(card):
-	if card.card_slot_card_in:
+	if card.card_slot_card_in or card == selected_card_for_placement:
 		return
 	if !is_hovering_on_card:
 		is_hovering_on_card = true
 		highligth_card(card, true)
 
 func on_hovered_off_card(card):
-	if !card.card_slot_card_in && !card_being_dragged:
+	if !card.card_slot_card_in && !card_being_dragged && card != selected_card_for_placement:
 		highligth_card(card, false)
 		var new_card_hovered = raycast_check_for_card()
 		if new_card_hovered:
@@ -126,7 +187,6 @@ func raycast_check_for_card_slot():
 	var result = space_state.intersect_point(parameters)
 	if result.size() > 0:
 		return result[0].collider.get_parent()
-		#return get_card_with_highest_z_index(result)
 	return null
 
 func raycast_check_for_card():
