@@ -198,10 +198,10 @@ func apply_type_advantage(attacking_card, defending_card):
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
 	
 	# Restaura valores após a batalha
-	attacking_card.vida = attacking_card.poder
-	defending_card.vida = defending_card.poder
-	attacking_card.poder = original_attacker_power
-	defending_card.poder = original_defender_power
+	#attacking_card.vida = attacking_card.poder
+	#defending_card.vida = defending_card.poder
+	#attacking_card.poder = original_attacker_power
+	#defending_card.poder = original_defender_power
 
 
 func destroy_card(card, card_owner):

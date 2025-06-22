@@ -23,11 +23,11 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if card_being_dragged:
-		var mouse_position = get_global_mouse_position()
-		card_being_dragged.position = Vector2(clamp(mouse_position.x, 0, screen_size.x), 
-			clamp(mouse_position.y, 0, screen_size.y))
-			
+	#if card_being_dragged:
+		#var mouse_position = get_global_mouse_position()
+		#card_being_dragged.position = Vector2(clamp(mouse_position.x, 0, screen_size.x), 
+			#clamp(mouse_position.y, 0, screen_size.y))
+	return
 
 func card_clicked(card):
 	if card.card_slot_card_in:
@@ -47,8 +47,10 @@ func card_clicked(card):
 func select_card_for_placement(card):
 	# Desseleciona qualquer carta anterior
 	if selected_card_for_placement:
+		selected_card_for_placement.position.y += 20
 		selected_card_for_placement.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
 		selected_card_for_placement.z_index = 1
+		selected_card_for_placement = null
 	
 	# Seleciona a nova carta
 	selected_card_for_placement = card
@@ -60,6 +62,7 @@ func select_card_for_placement(card):
 func select_card_for_battle(card):
 	# Desseleciona carta de posicionamento se houver
 	if selected_card_for_placement:
+		selected_card_for_placement.position.y += 20
 		selected_card_for_placement.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
 		selected_card_for_placement.z_index = 1
 		selected_card_for_placement = null
@@ -137,6 +140,7 @@ func unselect_select_card():
 		selected_card_for_attack = null
 		
 	if selected_card_for_placement:
+		selected_card_for_placement.position.y += 20
 		selected_card_for_placement.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
 		selected_card_for_placement.z_index = 1
 		selected_card_for_placement = null
