@@ -19,6 +19,9 @@ var is_enemy_turn = false
 var random_empty_card_slots
 var tela_derrota
 var played_card_this_turn = false  # Adicionado para controlar jogadas por turno
+var audio_player: AudioStreamPlayer
+var placement_sound: AudioStream
+var attack_move_sound: AudioStream
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -36,6 +39,22 @@ func _ready():
 	$"../PlayerHealth".text = str(player_health)
 	enemy_health = START_HEALTH
 	$"../EnemyHealth".text = str(enemy_health)
+	
+	audio_player = AudioStreamPlayer.new()
+	add_child(audio_player)
+	
+	placement_sound = preload("res://Sound/place_card.wav")
+	attack_move_sound = preload("res://Sound/attack_sound.wav")
+
+func play_placement_sound():
+	if placement_sound:
+		audio_player.stream = placement_sound
+		audio_player.play()
+		
+func play_attack_move_sound():
+	if attack_move_sound:
+		audio_player.stream = attack_move_sound
+		audio_player.play()
 
 func _on_end_turn_button_pressed():
 	#$"../Deck".draw_card()
@@ -51,6 +70,8 @@ func reset_played_card():
 func opponent_turn():
 	$"../EndTurnButton".disabled = true
 	$"../EndTurnButton".visible = false
+	
+	reset_exhausted_cards_enemy()
 
 	await wait(1.0)
 
@@ -98,9 +119,13 @@ func direct_attack(attacking_card, attacker):
 	else:
 		new_pos_y = 0
 		player_cards_that_attacked_this_turn.append(attacking_card)
+		await wait(0.5)
+		attacking_card.set_exhausted(true)
 	var new_pos = Vector2(attacking_card.position.x, new_pos_y)
 	
 	attacking_card.z_index = 5
+	
+	play_attack_move_sound()
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(attacking_card, "position", new_pos, CARD_MOVE_SPEED)
@@ -132,6 +157,13 @@ func attack(attacking_card, defendign_card, attacker):
 	if attacker == "player":
 		$"../CardManager".selected_card_for_attack = null  # Desseleciona após ataque
 		player_cards_that_attacked_this_turn.append(attacking_card)
+		if attacking_card.poder > 0:
+			await wait(0.5)
+			attacking_card.set_exhausted(true)
+		elif  attacking_card.poder == 0:
+			attacking_card.reset_visuals()
+	
+	play_attack_move_sound()
 	
 	attacking_card.z_index = 5
 	var new_pos = Vector2(defendign_card.position.x, defendign_card.position.y + BATTLE_POS_OFFSET)
@@ -210,6 +242,8 @@ func destroy_card(card, card_owner):
 	
 	var slot_to_free = card.card_slot_card_in
 	
+	card.reset_visuals()
+	
 	if card_owner == "player":
 		card.get_node("Area2D/CollisionShape2D").disabled = true
 		if card in player_cards_on_battlefield:
@@ -269,6 +303,8 @@ func try_play_card_with_highest_attack():
 	card_with_highest_atk.card_slot_card_in = random_empty_card_slots
 	enemy_cards_on_battlefield.append(card_with_highest_atk)
 	enemy_cards_that_attacked_this_tur.append(card_with_highest_atk)
+	await wait(0.5)
+	card_with_highest_atk.set_exhausted(true)
 
 	await wait(1.0)
 
@@ -281,6 +317,15 @@ func enemy_card_selected(defending_card):
 	var attacking_card = $"../CardManager".selected_card_for_attack
 	if attacking_card and defending_card in enemy_cards_on_battlefield:
 		attack(attacking_card, defending_card, "player")
+		
+func reset_exhausted_cards_player():
+	for card in player_cards_on_battlefield:
+		if is_instance_valid(card):
+			card.set_exhausted(false)
+
+func reset_exhausted_cards_enemy():
+	for card in enemy_cards_on_battlefield:
+		card.set_exhausted(false)
 
 func end_oponent_turn():
 	is_enemy_turn =  false
@@ -289,6 +334,7 @@ func end_oponent_turn():
 	$"../CardManager".reset_played_card()
 	$"../Deck".reset_draw()
 	$"../Deck".draw_card()
+	reset_exhausted_cards_player()
 	enemy_cards_that_attacked_this_tur = []
 
 func lose(loser):
@@ -316,7 +362,11 @@ func place_card_on_slot(card, card_slot):
 	card_slot.card_in_slot = true
 	card_slot.get_node("Area2D/CollisionShape2D").disabled = true
 	
+	await wait(0.5)
+	card.set_exhausted(true)
 	player_cards_on_battlefield.append(card)
 	player_cards_that_attacked_this_turn.append(card)
+	
+	play_placement_sound()
 	
 	return true

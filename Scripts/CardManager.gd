@@ -5,6 +5,7 @@ const COLLISION_MASK_CARD_SLOT = 2
 const DEFAULT_CARD_MOVE_SPEED = 0.1
 const DEFAULT_CARD_SIZE = 0.65
 const HOVERD_CARD_SIZE = 0.75
+const SHAKE_ANGLE = 0.15
 
 var screen_size
 var card_being_dragged
@@ -100,10 +101,13 @@ func place_selected_card_on_slot(card_slot):
 		# Atualiza o gerenciador de batalha
 		$"../battleManager".player_cards_on_battlefield.append(card)
 		$"../battleManager".player_cards_that_attacked_this_turn.append(card)
+		card.set_exhausted(true)
 		
 		# Limpa seleção
 		selected_card_for_placement = null
 		return true
+		
+		$"../battleManager".play_placement_sound()
 	return false
 
 
@@ -217,3 +221,4 @@ func get_card_with_highest_z_index(cards):
 	
 func reset_played_card():
 	played_card_this_turn = false
+	
