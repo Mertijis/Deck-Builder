@@ -119,8 +119,7 @@ func direct_attack(attacking_card, attacker):
 	else:
 		new_pos_y = 0
 		player_cards_that_attacked_this_turn.append(attacking_card)
-		await wait(0.5)
-		attacking_card.set_exhausted(true)
+		
 	var new_pos = Vector2(attacking_card.position.x, new_pos_y)
 	
 	attacking_card.z_index = 5
@@ -145,7 +144,8 @@ func direct_attack(attacking_card, attacker):
 	var tween2 = get_tree().create_tween()
 	tween2.tween_property(attacking_card, "position", attacking_card.card_slot_card_in.position, CARD_MOVE_SPEED)
 	attacking_card.z_index = 0
-	await wait(1.0)
+	await wait(0.70)
+	attacking_card.set_exhausted(true)
 	
 
 func attack(attacking_card, defendign_card, attacker):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://5vbjliw2l7e8"]
+[gd_scene load_steps=16 format=3 uid="uid://5vbjliw2l7e8"]
 
 [ext_resource type="Script" uid="uid://dqy3cf66c8yrj" path="res://Scripts/CardManager.gd" id="1_wlmex"]
 [ext_resource type="Script" uid="uid://b5rynhi3qku5h" path="res://Scripts/cardSlot.gd" id="3_kub73"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://bb37eqewty2of" path="res://Scripts/EnemyHand.gd" id="11_62wo1"]
 [ext_resource type="Texture2D" uid="uid://dbixkimpmm0lt" path="res://Assets/CardSlot.png" id="12_yqi8l"]
 [ext_resource type="PackedScene" uid="uid://8sqv6uqithve" path="res://Scenes/telaDerrota.tscn" id="13_5bpn3"]
+[ext_resource type="Texture2D" uid="uid://ckjcj327n2l7m" path="res://Assets/tabela_vantagem.png" id="14_c2ibq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_skt2e"]
 size = Vector2(180, 266)
@@ -174,5 +175,10 @@ texture = ExtResource("12_yqi8l")
 visible = false
 z_index = 10
 position = Vector2(960, 540)
+
+[node name="Tabela Vantagem" type="Sprite2D" parent="."]
+position = Vector2(293, 248)
+scale = Vector2(0.189533, 0.189533)
+texture = ExtResource("14_c2ibq")
 
 [connection signal="pressed" from="EndTurnButton" to="battleManager" method="_on_end_turn_button_pressed"]
