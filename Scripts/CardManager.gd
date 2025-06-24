@@ -11,6 +11,7 @@ var screen_size
 var card_being_dragged
 var is_hovering_on_card
 var player_hand_reference
+var battle_manager_reference
 var played_card_this_turn = false
 var selected_card_for_attack  # Renomeado para maior clareza
 var selected_card_for_placement  # Nova variável para carta selecionada para posicionamento
@@ -19,6 +20,7 @@ var selected_card_for_placement  # Nova variável para carta selecionada para po
 func _ready():
 	screen_size = get_viewport_rect().size
 	player_hand_reference = $"../PlayerHand"
+	battle_manager_reference = $"../battleManager"
 	$"../InputManager".connect("left_mouse_button_released", on_left_click_released)
 
 
@@ -33,10 +35,10 @@ func _process(delta):
 func card_clicked(card):
 	if card.card_slot_card_in:
 		# Carta já está no campo de batalha
-		if $"../battleManager".is_enemy_turn == false:
-			if card not in $"../battleManager".player_cards_that_attacked_this_turn:
-				if $"../battleManager".enemy_cards_on_battlefield.size() == 0:
-					$"../battleManager".direct_attack(card,"player")
+		if battle_manager_reference.is_enemy_turn == false:
+			if card not in battle_manager_reference.player_cards_that_attacked_this_turn:
+				if battle_manager_reference.enemy_cards_on_battlefield.size() == 0:
+					battle_manager_reference.direct_attack(card,"player")
 					return
 				else: 
 					select_card_for_battle(card)
@@ -92,6 +94,7 @@ func place_selected_card_on_slot(card_slot):
 		card.card_slot_card_in = card_slot
 		player_hand_reference.remove_card_from_hand(card)
 		card.position = card_slot.position
+		battle_manager_reference.play_placement_sound()
 		card.scale = Vector2(DEFAULT_CARD_SIZE, DEFAULT_CARD_SIZE)
 		
 		# Atualiza o slot
@@ -99,15 +102,14 @@ func place_selected_card_on_slot(card_slot):
 		card_slot.get_node("Area2D/CollisionShape2D").disabled = true
 		
 		# Atualiza o gerenciador de batalha
-		$"../battleManager".player_cards_on_battlefield.append(card)
-		$"../battleManager".player_cards_that_attacked_this_turn.append(card)
+		battle_manager_reference.player_cards_on_battlefield.append(card)
+		battle_manager_reference.player_cards_that_attacked_this_turn.append(card)
 		card.set_exhausted(true)
 		
 		# Limpa seleção
 		selected_card_for_placement = null
 		return true
 		
-		$"../battleManager".play_placement_sound()
 	return false
 
 
@@ -129,8 +131,8 @@ func finish_drag():
 			card_being_dragged.position = card_slot_found.position
 			card_slot_found.card_in_slot = true
 			card_slot_found.get_node("Area2D/CollisionShape2D").disabled = true
-			$"../battleManager".player_cards_on_battlefield.append(card_being_dragged)
-			$"../battleManager".player_cards_that_attacked_this_turn.append(card_being_dragged)
+			battle_manager_reference.player_cards_on_battlefield.append(card_being_dragged)
+			battle_manager_reference.player_cards_that_attacked_this_turn.append(card_being_dragged)
 			card_being_dragged = null
 			return
 	else:

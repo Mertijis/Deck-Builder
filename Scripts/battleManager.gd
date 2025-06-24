@@ -40,7 +40,7 @@ func _ready():
 	enemy_health = START_HEALTH
 	$"../EnemyHealth".text = str(enemy_health)
 	
-	audio_player = AudioStreamPlayer.new()
+	audio_player = $"../Sound"
 	add_child(audio_player)
 	
 	placement_sound = preload("res://Sound/place_card.wav")
@@ -119,8 +119,6 @@ func direct_attack(attacking_card, attacker):
 	else:
 		new_pos_y = 0
 		player_cards_that_attacked_this_turn.append(attacking_card)
-		await wait(0.5)
-		attacking_card.set_exhausted(true)
 	var new_pos = Vector2(attacking_card.position.x, new_pos_y)
 	
 	attacking_card.z_index = 5
@@ -145,7 +143,9 @@ func direct_attack(attacking_card, attacker):
 	var tween2 = get_tree().create_tween()
 	tween2.tween_property(attacking_card, "position", attacking_card.card_slot_card_in.position, CARD_MOVE_SPEED)
 	attacking_card.z_index = 0
-	await wait(1.0)
+	await wait(0.5)
+	attacking_card.set_exhausted(true)
+	await wait(0.5)
 	
 
 func attack(attacking_card, defendign_card, attacker):
@@ -157,11 +157,7 @@ func attack(attacking_card, defendign_card, attacker):
 	if attacker == "player":
 		$"../CardManager".selected_card_for_attack = null  # Desseleciona após ataque
 		player_cards_that_attacked_this_turn.append(attacking_card)
-		if attacking_card.poder > 0:
-			await wait(0.5)
-			attacking_card.set_exhausted(true)
-		elif  attacking_card.poder == 0:
-			attacking_card.reset_visuals()
+		
 	
 	play_attack_move_sound()
 	
@@ -173,12 +169,18 @@ func attack(attacking_card, defendign_card, attacker):
 	var tween2 = get_tree().create_tween()
 	tween2.tween_property(attacking_card, "position", attacking_card.card_slot_card_in.position, CARD_MOVE_SPEED)
 	
+	if attacking_card.poder > 0:
+		await wait(0.5)
+		attacking_card.set_exhausted(true)
+	elif  attacking_card.poder == 0:
+		attacking_card.reset_visuals()
+	
 	#card damage
 	defendign_card.vida = max(0, (defendign_card.vida - attacking_card.poder))
 	attacking_card.vida = max(0, (attacking_card.vida - defendign_card.poder))
 	
-	defendign_card.get_node("Poder").text = str(defendign_card.vida)
-	attacking_card.get_node("Poder").text = str(attacking_card.vida)
+	defendign_card.get_node("Poder").text = str(defendign_card.vida)[0]
+	attacking_card.get_node("Poder").text = str(attacking_card.vida)[0]
 	
 	defendign_card.poder = defendign_card.vida
 	attacking_card.poder = attacking_card.vida
@@ -297,6 +299,7 @@ func try_play_card_with_highest_attack():
 	tween.tween_property(card_with_highest_atk, "position", random_empty_card_slots.position, CARD_MOVE_SPEED)
 	tween.parallel().tween_property(card_with_highest_atk, "scale", Vector2(CARD_SMALLER_SCALE, CARD_SMALLER_SCALE), CARD_MOVE_SPEED)
 	card_with_highest_atk.get_node("AnimationPlayer").play("RESET")
+	play_placement_sound()
 
 	# Atualiza referências
 	$"../Enemyhand".remove_card_from_hand(card_with_highest_atk)
@@ -342,13 +345,14 @@ func lose(loser):
 	if loser == "player":
 		$"../Tela Derrota".visible = true
 		tela_derrota.text = "Você Perdeu"
-		await  wait(5.0)
+		await wait(5)
+		$"../Sound".reset_background_music()
 		get_tree().reload_current_scene()
 	else:
 		$"../Tela Derrota".visible = true
 		tela_derrota.text = "Você Ganhou"
 		$"../EndTurnButton".disabled = true
-		await  wait(5.0)
+		$"../Sound".reset_background_music()
 		get_tree().reload_current_scene()
 
 # Nova função para posicionar carta no campo
