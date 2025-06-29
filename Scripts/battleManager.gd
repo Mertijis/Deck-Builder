@@ -41,10 +41,8 @@ func _ready():
 	$"../EnemyHealth".text = str(enemy_health)
 	
 	audio_player = $"../Sound"
-	add_child(audio_player)
 	
 	placement_sound = preload("res://Sound/place_card.wav")
-	attack_move_sound = preload("res://Sound/attack_sound.wav")
 
 func play_placement_sound():
 	if placement_sound:
@@ -112,6 +110,8 @@ func opponent_turn():
 	end_oponent_turn()
 
 func direct_attack(attacking_card, attacker):
+	
+	attack_move_sound = preload("res://Sound/attack_sound.wav")
 	
 	var new_pos_y
 	if attacker == "enemy":
@@ -207,30 +207,39 @@ func apply_type_advantage(attacking_card, defending_card):
 	# 2 - Naruto
 	# 3 - Dragon Ball
 	
-	# Guarda valores originais
-	var original_attacker_power = attacking_card.poder
-	var original_defender_power = defending_card.poder
-	
 	# Aplica vantagem de ataque
 	if attacking_card.anime == 1 and defending_card.anime == 2:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
+		attack_move_sound = preload("res://Sound/effective_attack.mp3")
+		return
 	
 	elif attacking_card.anime  == 2 and defending_card.anime == 3:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
+		attack_move_sound = preload("res://Sound/effective_attack.mp3")
+		return
 	
 	elif attacking_card.anime  == 3 and defending_card.anime == 1:
 		attacking_card.poder = int(ceil(attacking_card.poder * 1.5))
+		attack_move_sound = preload("res://Sound/effective_attack.mp3")
+		return
 	
 	# Aplica vantagem na DEFESA (contra-ataque)
 	if defending_card.anime == 1 and attacking_card.anime  == 2:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
+		attack_move_sound = preload("res://Sound/weak_attack.wav")
+		return
 	
 	elif defending_card.anime == 2 and attacking_card.anime  == 3:
 		defending_card.poder = ceil(ceil(defending_card.poder * 1.5))
+		attack_move_sound = preload("res://Sound/weak_attack.wav")
+		return
 	
 	elif defending_card.anime == 3 and attacking_card.anime  == 1:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
+		attack_move_sound = preload("res://Sound/weak_attack.wav")
+		return
 	
+	attack_move_sound = preload("res://Sound/attack_sound.wav")
 	# Restaura valores após a batalha
 	#attacking_card.vida = attacking_card.poder
 	#defending_card.vida = defending_card.poder

@@ -23,15 +23,6 @@ func _ready():
 	battle_manager_reference = $"../battleManager"
 	$"../InputManager".connect("left_mouse_button_released", on_left_click_released)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	#if card_being_dragged:
-		#var mouse_position = get_global_mouse_position()
-		#card_being_dragged.position = Vector2(clamp(mouse_position.x, 0, screen_size.x), 
-			#clamp(mouse_position.y, 0, screen_size.y))
-	return
-
 func card_clicked(card):
 	if card.card_slot_card_in:
 		# Carta já está no campo de batalha
