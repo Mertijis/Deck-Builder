@@ -14,9 +14,9 @@
 [ext_resource type="Texture2D" uid="uid://dbixkimpmm0lt" path="res://Assets/CardSlot.png" id="12_yqi8l"]
 [ext_resource type="PackedScene" uid="uid://8sqv6uqithve" path="res://Scenes/telaDerrota.tscn" id="13_5bpn3"]
 [ext_resource type="Script" path="res://Scripts/Sound.gd" id="14_wn3e8"]
-[ext_resource type="AudioStream" uid="uid://b7xkc2rrxwm66" path="res://Sound/DRAGONBALL.mp3" id="15_0wj7p"]
-[ext_resource type="AudioStream" uid="uid://cpjnb6206ispt" path="res://Sound/NARUTO.mp3" id="16_yv7gc"]
-[ext_resource type="AudioStream" uid="uid://gbpuxktsvn7h" path="res://Sound/ONEPICE.mp3" id="17_r68qf"]
+[ext_resource type="AudioStream" uid="uid://cexv6l8m5r5xu" path="res://Sound/DRAGONBALL.mp3" id="15_0wj7p"]
+[ext_resource type="AudioStream" uid="uid://cbilc17gdp8fx" path="res://Sound/NARUTO.mp3" id="16_yv7gc"]
+[ext_resource type="AudioStream" uid="uid://d2nm8ihtn2qeg" path="res://Sound/ONEPICE.mp3" id="17_r68qf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_skt2e"]
 size = Vector2(180, 266)

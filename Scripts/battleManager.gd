@@ -42,7 +42,7 @@ func _ready():
 	
 	audio_player = $"../Sound"
 	
-	placement_sound = preload("res://Sound/place_card.wav")
+	placement_sound = preload("res://Sound/place_card.mp3")
 
 func play_placement_sound():
 	if placement_sound:
@@ -111,7 +111,7 @@ func opponent_turn():
 
 func direct_attack(attacking_card, attacker):
 	
-	attack_move_sound = preload("res://Sound/attack_sound.wav")
+	attack_move_sound = preload("res://Sound/attack_sound.mp3")
 	
 	var new_pos_y
 	if attacker == "enemy":
@@ -226,20 +226,20 @@ func apply_type_advantage(attacking_card, defending_card):
 	# Aplica vantagem na DEFESA (contra-ataque)
 	if defending_card.anime == 1 and attacking_card.anime  == 2:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
-		attack_move_sound = preload("res://Sound/weak_attack.wav")
+		attack_move_sound = preload("res://Sound/weak_attack.mp3")
 		return
 	
 	elif defending_card.anime == 2 and attacking_card.anime  == 3:
 		defending_card.poder = ceil(ceil(defending_card.poder * 1.5))
-		attack_move_sound = preload("res://Sound/weak_attack.wav")
+		attack_move_sound = preload("res://Sound/weak_attack.mp3")
 		return
 	
 	elif defending_card.anime == 3 and attacking_card.anime  == 1:
 		defending_card.poder = int(ceil(defending_card.poder * 1.5))
-		attack_move_sound = preload("res://Sound/weak_attack.wav")
+		attack_move_sound = preload("res://Sound/weak_attack.mp3")
 		return
 	
-	attack_move_sound = preload("res://Sound/attack_sound.wav")
+	attack_move_sound = preload("res://Sound/attack_sound.mp3")
 	# Restaura valores após a batalha
 	#attacking_card.vida = attacking_card.poder
 	#defending_card.vida = defending_card.poder
@@ -361,6 +361,7 @@ func lose(loser):
 		$"../Tela Derrota".visible = true
 		tela_derrota.text = "Você Ganhou"
 		$"../EndTurnButton".disabled = true
+		await wait(5)
 		$"../Sound".reset_background_music()
 		get_tree().reload_current_scene()
 
