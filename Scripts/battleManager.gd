@@ -63,8 +63,9 @@ func _on_end_turn_button_pressed():
 	is_enemy_turn = true
 	$"../CardManager".unselect_select_card()
 	player_cards_that_attacked_this_turn = []
-	played_card_this_turn = false  # Resetar ao iniciar turno inimigo
 	opponent_turn()
+	played_card_this_turn = false  # Resetar ao iniciar turno inimigo
+	
 	
 func reset_played_card():
 	played_card_this_turn = false
@@ -115,6 +116,9 @@ func opponent_turn():
 
 func direct_attack(attacking_card, attacker):
 	
+	if player_health == 0:
+		pass
+	
 	attack_move_sound = preload("res://Sound/attack_sound.mp3")
 	
 	var new_pos_y
@@ -132,21 +136,22 @@ func direct_attack(attacking_card, attacker):
 	var tween = get_tree().create_tween()
 	tween.tween_property(attacking_card, "position", new_pos, CARD_MOVE_SPEED)
 	await wait(0.15)
+
+	var tween2 = get_tree().create_tween()
+	tween2.tween_property(attacking_card, "position", attacking_card.card_slot_card_in.position, CARD_MOVE_SPEED)
+	attacking_card.z_index = 0
 	
 	if attacker == "enemy":
 		player_health = max(0, player_health - attacking_card.poder)
 		$"../PlayerHealth".text = str(player_health)
 		if player_health == 0:
-			lose("player")
+			await lose("player")
 	else:
 		enemy_health = max(0, enemy_health - attacking_card.poder)
 		$"../EnemyHealth".text = str(enemy_health)
 		if enemy_health == 0:
-			lose("enemy")
+			await lose("enemy")
 	
-	var tween2 = get_tree().create_tween()
-	tween2.tween_property(attacking_card, "position", attacking_card.card_slot_card_in.position, CARD_MOVE_SPEED)
-	attacking_card.z_index = 0
 	await wait(0.5)
 	attacking_card.set_exhausted(true)
 	await wait(0.5)
@@ -354,18 +359,17 @@ func end_oponent_turn():
 	enemy_cards_that_attacked_this_tur = []
 
 func lose(loser):
-	await wait(1.0)
 	if loser == "player":
 		$"../Tela Derrota".visible = true
 		tela_derrota.text = "Você Perdeu"
-		await wait(5)
+		await wait(2)
 		$"../Sound".reset_background_music()
 		get_tree().reload_current_scene()
 	else:
 		$"../Tela Derrota".visible = true
 		tela_derrota.text = "Você Ganhou"
 		$"../EndTurnButton".disabled = true
-		await wait(5)
+		await wait(2)
 		$"../Sound".reset_background_music()
 		get_tree().reload_current_scene()
 
@@ -373,18 +377,17 @@ func lose(loser):
 func place_card_on_slot(card, card_slot):
 	if played_card_this_turn:
 		return false
-	
 	played_card_this_turn = true
 	card.z_index = 0
 	card.card_slot_card_in = card_slot
 	card_slot.card_in_slot = true
 	card_slot.get_node("Area2D/CollisionShape2D").disabled = true
-	
+		
 	await wait(0.5)
 	card.set_exhausted(true)
 	player_cards_on_battlefield.append(card)
 	player_cards_that_attacked_this_turn.append(card)
-	
+		
 	play_placement_sound()
-	
+		
 	return true

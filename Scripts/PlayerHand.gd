@@ -38,8 +38,9 @@ func calculate_card_position(index):
 
 
 func animate_card_to_position(card, new_position, speed):
-	var tween = get_tree().create_tween()
-	tween.tween_property(card, "position", new_position, speed)
+	if not $"../battleManager".player_health == 0 or not $"../battleManager".enemy_health == 0:
+		var tween = get_tree().create_tween()
+		tween.tween_property(card, "position", new_position, speed)
 
 
 func remove_card_from_hand(card):

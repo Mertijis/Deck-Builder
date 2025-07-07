@@ -47,7 +47,7 @@ func select_card_for_placement(card):
 		selected_card_for_placement = null
 	
 	# Seleciona a nova carta
-	if not played_card_this_turn:
+	if not played_card_this_turn and not $"../battleManager".is_enemy_turn:
 		selected_card_for_placement = card
 		card.scale = Vector2(HOVERD_CARD_SIZE, HOVERD_CARD_SIZE)
 		card.z_index = 3  # Coloca acima de outras cartas
@@ -157,7 +157,7 @@ func on_left_click_released():
 			place_selected_card_on_slot(card_slot_found)
 
 func on_hovered_over_card(card):
-	if card.card_slot_card_in or card == selected_card_for_placement or played_card_this_turn:
+	if card.card_slot_card_in or card == selected_card_for_placement or played_card_this_turn or $"../battleManager".is_enemy_turn:
 		return
 	if !is_hovering_on_card:
 		is_hovering_on_card = true
