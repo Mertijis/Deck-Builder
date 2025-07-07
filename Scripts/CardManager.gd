@@ -47,10 +47,11 @@ func select_card_for_placement(card):
 		selected_card_for_placement = null
 	
 	# Seleciona a nova carta
-	selected_card_for_placement = card
-	card.scale = Vector2(HOVERD_CARD_SIZE, HOVERD_CARD_SIZE)
-	card.z_index = 3  # Coloca acima de outras cartas
-	card.position.y -= 20  # Move ligeiramente para cima como feedback visual
+	if not played_card_this_turn:
+		selected_card_for_placement = card
+		card.scale = Vector2(HOVERD_CARD_SIZE, HOVERD_CARD_SIZE)
+		card.z_index = 3  # Coloca acima de outras cartas
+		card.position.y -= 20  # Move ligeiramente para cima como feedback visual
 
 
 func select_card_for_battle(card):
@@ -156,7 +157,7 @@ func on_left_click_released():
 			place_selected_card_on_slot(card_slot_found)
 
 func on_hovered_over_card(card):
-	if card.card_slot_card_in or card == selected_card_for_placement:
+	if card.card_slot_card_in or card == selected_card_for_placement or played_card_this_turn:
 		return
 	if !is_hovering_on_card:
 		is_hovering_on_card = true

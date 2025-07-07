@@ -69,3 +69,7 @@ func raycast_at_cursor():
 		# Se tivermos uma carta selecionada para posicionamento, coloque no slot
 		if card_manager_reference.selected_card_for_placement:
 			card_manager_reference.place_selected_card_on_slot(card_slot)
+
+
+func _on_back_pressed() -> void:
+	get_tree().change_scene_to_file("res://main_menu.tscn") 

@@ -22,6 +22,8 @@ var played_card_this_turn = false  # Adicionado para controlar jogadas por turno
 var audio_player: AudioStreamPlayer
 var placement_sound: AudioStream
 var attack_move_sound: AudioStream
+var screen_height
+var screen_width
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -43,6 +45,8 @@ func _ready():
 	audio_player = $"../Sound"
 	
 	placement_sound = preload("res://Sound/place_card.mp3")
+	screen_height = get_viewport().size.y
+	screen_width = get_viewport().size.x
 
 func play_placement_sound():
 	if placement_sound:
@@ -115,9 +119,9 @@ func direct_attack(attacking_card, attacker):
 	
 	var new_pos_y
 	if attacker == "enemy":
-		new_pos_y = 1080
+		new_pos_y = screen_height * 0.9
 	else:
-		new_pos_y = 0
+		new_pos_y = screen_height * 0.01
 		player_cards_that_attacked_this_turn.append(attacking_card)
 	var new_pos = Vector2(attacking_card.position.x, new_pos_y)
 	

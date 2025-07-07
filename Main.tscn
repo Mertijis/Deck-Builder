@@ -1,19 +1,19 @@
 [gd_scene load_steps=19 format=3 uid="uid://5vbjliw2l7e8"]
 
-[ext_resource type="Script" path="res://Scripts/CardManager.gd" id="1_wlmex"]
-[ext_resource type="Script" path="res://Scripts/cardSlot.gd" id="3_kub73"]
+[ext_resource type="Script" uid="uid://dqy3cf66c8yrj" path="res://Scripts/CardManager.gd" id="1_wlmex"]
+[ext_resource type="Script" uid="uid://b5rynhi3qku5h" path="res://Scripts/cardSlot.gd" id="3_kub73"]
 [ext_resource type="PackedScene" uid="uid://cd1tn7hql8jr3" path="res://Scenes/card_slot.tscn" id="3_ofvjh"]
 [ext_resource type="Texture2D" uid="uid://xvi8qmwdkrte" path="res://Assets/BackCard.png" id="4_gpfhb"]
-[ext_resource type="Script" path="res://Scripts/PlayerHand.gd" id="4_r8b0q"]
-[ext_resource type="Script" path="res://Scripts/Deck.gd" id="5_ih1bc"]
-[ext_resource type="Script" path="res://Scripts/InputManager.gd" id="6_gs2qo"]
+[ext_resource type="Script" uid="uid://d2yhkny0gxrep" path="res://Scripts/PlayerHand.gd" id="4_r8b0q"]
+[ext_resource type="Script" uid="uid://db5iojkbbae4o" path="res://Scripts/Deck.gd" id="5_ih1bc"]
+[ext_resource type="Script" uid="uid://b6fnk64l42m1q" path="res://Scripts/InputManager.gd" id="6_gs2qo"]
 [ext_resource type="PackedScene" uid="uid://cjprruufasp1k" path="res://Scenes/enemy_card_slot.tscn" id="8_w23cf"]
-[ext_resource type="Script" path="res://Scripts/EnemyDeck.gd" id="9_f3vku"]
-[ext_resource type="Script" path="res://Scripts/battleManager.gd" id="10_x863k"]
-[ext_resource type="Script" path="res://Scripts/EnemyHand.gd" id="11_62wo1"]
+[ext_resource type="Script" uid="uid://cjwj3comoq4fh" path="res://Scripts/EnemyDeck.gd" id="9_f3vku"]
+[ext_resource type="Script" uid="uid://ckjrfe0pcpq7k" path="res://Scripts/battleManager.gd" id="10_x863k"]
+[ext_resource type="Script" uid="uid://bb37eqewty2of" path="res://Scripts/EnemyHand.gd" id="11_62wo1"]
 [ext_resource type="Texture2D" uid="uid://dbixkimpmm0lt" path="res://Assets/CardSlot.png" id="12_yqi8l"]
 [ext_resource type="PackedScene" uid="uid://8sqv6uqithve" path="res://Scenes/telaDerrota.tscn" id="13_5bpn3"]
-[ext_resource type="Script" path="res://Scripts/Sound.gd" id="14_wn3e8"]
+[ext_resource type="Script" uid="uid://0kil6emasr4v" path="res://Scripts/Sound.gd" id="14_wn3e8"]
 [ext_resource type="AudioStream" uid="uid://cexv6l8m5r5xu" path="res://Sound/DRAGONBALL.mp3" id="15_0wj7p"]
 [ext_resource type="AudioStream" uid="uid://cbilc17gdp8fx" path="res://Sound/NARUTO.mp3" id="16_yv7gc"]
 [ext_resource type="AudioStream" uid="uid://d2nm8ihtn2qeg" path="res://Sound/ONEPICE.mp3" id="17_r68qf"]
@@ -183,4 +183,14 @@ position = Vector2(960, 540)
 script = ExtResource("14_wn3e8")
 tracks = Array[AudioStream]([ExtResource("15_0wj7p"), ExtResource("16_yv7gc"), ExtResource("17_r68qf")])
 
+[node name="Back" type="Button" parent="."]
+offset_left = 117.0
+offset_top = 92.0
+offset_right = 172.0
+offset_bottom = 123.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Voltar"
+
 [connection signal="pressed" from="EndTurnButton" to="battleManager" method="_on_end_turn_button_pressed"]
+[connection signal="pressed" from="Back" to="InputManager" method="_on_back_pressed"]
