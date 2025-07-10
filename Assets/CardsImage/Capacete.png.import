@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vcwu7rokoqxq"
-path="res://.godot/imported/5.jpg-d86df3a0bbde3bb31d260cb498e796af.ctex"
+uid="uid://bax3sh76lrark"
+path="res://.godot/imported/Capacete.png-7ff7f5c53a91a8b7ed12301ad6666d94.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImageBackup/5.jpg"
-dest_files=["res://.godot/imported/5.jpg-d86df3a0bbde3bb31d260cb498e796af.ctex"]
+source_file="res://Assets/CardsImage/Capacete.png"
+dest_files=["res://.godot/imported/Capacete.png-7ff7f5c53a91a8b7ed12301ad6666d94.ctex"]
 
 [params]
 

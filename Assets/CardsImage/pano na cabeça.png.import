@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkh45ja7ribya"
-path="res://.godot/imported/11.jpg-b8837cfd36a7510f98d1f8af0138dc9c.ctex"
+uid="uid://xmp3lvgmocrq"
+path="res://.godot/imported/pano na cabeça.png-6aecd5127f82c4db39e50b259510b62c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/CardsImageBackup/11.jpg"
-dest_files=["res://.godot/imported/11.jpg-b8837cfd36a7510f98d1f8af0138dc9c.ctex"]
+source_file="res://Assets/CardsImage/pano na cabeça.png"
+dest_files=["res://.godot/imported/pano na cabeça.png-6aecd5127f82c4db39e50b259510b62c.ctex"]
 
 [params]
 
